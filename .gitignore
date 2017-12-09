@@ -22,10 +22,12 @@
 hs_err_pid*
 
 .metadata
+/bin/
+/tmp/
 bin/
 tmp/
 
-.settings/
+/.settings/
 
 *.tmp
 *.bak
