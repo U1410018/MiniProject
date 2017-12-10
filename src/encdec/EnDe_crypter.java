@@ -70,7 +70,6 @@ public class EnDe_crypter {
         AlgorithmParameters params = dcipher.getParameters();
         iv = params.getParameterSpec(IvParameterSpec.class).getIV();
         
-//        System.out.println("enc: "+java.util.Arrays.toString(iv));
         byte[] utf8EncryptedData = dcipher.doFinal(data.getBytes());
         String base64EncryptedData = new BASE64Encoder().encode(utf8EncryptedData);
         return base64EncryptedData;

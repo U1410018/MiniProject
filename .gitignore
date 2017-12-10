@@ -39,8 +39,8 @@ local.properties
 
 *.classpath
 
-.classpath
-/.classpath
+/.classpath/
+/*.classpath
 
 .loadpath
 .recommenders
