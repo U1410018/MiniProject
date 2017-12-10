@@ -191,7 +191,7 @@ public class User {
 		obj.put("un_iv", new BASE64Encoder().encode(enc.getIv()));
 		obj.put("balance", enc.encrypt(String.valueOf(getBalance())).toString());
 		obj.put("b_iv", new BASE64Encoder().encode(enc.getIv()));
-
+		
 		return obj;
 	}
 

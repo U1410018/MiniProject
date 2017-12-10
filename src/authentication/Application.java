@@ -10,7 +10,7 @@ import java.util.Scanner;
 import org.json.JSONObject;
 
 // Mukhammadjon Tokhirov
-public class Authentication {
+public class Application {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -27,5 +27,5 @@ public class Authentication {
 		user = User.getUserFromFile("12174117", "hello1234");
 		System.out.println(user.toString());
 	}
-
+	
 }
