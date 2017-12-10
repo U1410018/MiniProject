@@ -14,22 +14,18 @@ public class Authentication {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Hello world");
+		//System.out.println("Hello world");
 		// Umar is the best
-		User u = new User("Mukhammadjon", "Tokhirov", "12174169", "Pa$$w0rd");
-		try {
-			OutputStreamWriter r = u.getWriter();
-
-			r.write(u.getUserInfoJsonObject().toString());
-			r.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("error: "+e.getMessage());
-			e.printStackTrace();
-		}
+		User u1 = new User("Mukhammadjon", "Tokhirov", "12174169", "Pa$$w0rd");
+		User u2 = new User("Umar", "Kholdarbekov", "12174152", "Admin1234");
+		User u3 = new User("Bunyod", "Ibrokhimov", "12174117", "hello1234");
+		
 		User user = User.getUserFromFile("12174169", "Pa$$w0rd");
 			System.out.println(user.toString());
-		
+		user = User.getUserFromFile("12174152", "Admin1234");
+		System.out.println(user.toString());
+		user = User.getUserFromFile("12174117", "hello1234");
+		System.out.println(user.toString());
 	}
 
 }

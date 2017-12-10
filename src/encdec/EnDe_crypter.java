@@ -48,7 +48,7 @@ public class EnDe_crypter {
 	        KeySpec spec = new PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount, keyStrength);
 	        SecretKey tmp = factory.generateSecret(spec);
 	        key = new SecretKeySpec(tmp.getEncoded(), "AES");
-	        System.out.println(tmp.getAlgorithm());
+	        //System.out.println(tmp.getAlgorithm());
 	        dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
@@ -70,7 +70,7 @@ public class EnDe_crypter {
         AlgorithmParameters params = dcipher.getParameters();
         iv = params.getParameterSpec(IvParameterSpec.class).getIV();
         
-        System.out.println("enc: "+java.util.Arrays.toString(iv));
+//        System.out.println("enc: "+java.util.Arrays.toString(iv));
         byte[] utf8EncryptedData = dcipher.doFinal(data.getBytes());
         String base64EncryptedData = new BASE64Encoder().encode(utf8EncryptedData);
         return base64EncryptedData;
@@ -102,7 +102,7 @@ public class EnDe_crypter {
         System.out.println("return null");
         return null;
     }
-
+    
     public static void main(String args[]) throws Exception {
         EnDe_crypter decrypter = new EnDe_crypter("1");
         String encrypted = decrypter.encrypt("the quick brown fox jumps over the lazy dog");

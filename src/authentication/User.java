@@ -38,7 +38,7 @@ public class User {
 		setUser_name(user_name);
 		setPassword(password);
 		user_file = new File("src/users/" + user_name + ".log");
-		System.out.println(user_file.getAbsoluteFile());
+//		System.out.println(user_file.getAbsoluteFile());
 		if (!user_file.exists()) {
 			try {
 				user_file.createNewFile();
@@ -46,9 +46,21 @@ public class User {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			System.out.println(user_file.toString());
 		}
+//		} else {
+//			System.out.println("The file already exists");
+//		}
+		
+		OutputStreamWriter r;
+		try {
+			r = this.getWriter();
+			r.write(this.getUserInfoJsonObject().toString());
+			r.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 	}
 
@@ -57,10 +69,10 @@ public class User {
 		return new OutputStreamWriter(stream);
 	}
 
-	public InputStreamReader getReader() throws FileNotFoundException {
-		FileInputStream stream = new FileInputStream(user_file);
-		return new InputStreamReader(stream);
-	}
+//	public InputStreamReader getReader() throws FileNotFoundException {
+//		FileInputStream stream = new FileInputStream(user_file);
+//		return new InputStreamReader(stream);
+//	}
 
 	public static InputStreamReader getReader(String name) throws FileNotFoundException {
 		File ufile = new File("src/users/" + name + ".log");
@@ -130,17 +142,20 @@ public class User {
 			s += scan.nextLine();
 		}
 		scan.close();
-		JSONObject object = new JSONObject(s);
-		String enc_data = object.getString("enc_data");
-		byte[] iv = new BASE64Decoder().decodeBuffer(object.getString("iv"));
-		System.out.println("dec: "+iv);
-		JSONObject obj = new JSONObject(enc.decrypt(enc_data, iv));
-		String first_name = obj.getString("first_name");
-		String last_name = obj.getString("last_name");
-		String user_name = obj.getString("user_name");
-		String balance = obj.getString("balance");
+		
+		JSONObject enc_data = new JSONObject(s);
+		
+		byte[] fn_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("fn_iv"));
+		byte[] ln_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("ln_iv"));
+		byte[] un_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("un_iv"));
+		byte[] b_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("b_iv"));
 
-		User u = new User(first_name, last_name,(user_name), password);
+		String first_name = enc.decrypt(enc_data.getString("first_name"), fn_iv); 
+		String last_name = enc.decrypt(enc_data.getString("last_name"), ln_iv);
+		String user_name = enc.decrypt(enc_data.getString("user_name"), un_iv);
+		String balance = enc.decrypt(enc_data.getString("balance"), b_iv);
+
+		User u = new User(first_name, last_name, user_name, password);
 		u.setBalance(Float.valueOf(balance));
 //		User u = null;
 		return u;
@@ -155,33 +170,29 @@ public class User {
 			e.printStackTrace();
 			return null;
 		}
-//		return null;
- catch (IOException e) {
+		//		return null;
+		 catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 	}
 	public String toString() {
-		return String.format("%s %s %f", getFullName(), getUser_name(), getBalance());
+		return String.format("%s %s %.2f", getFullName(), getUser_name(), getBalance());
 	}
 	public JSONObject getUserInfoJsonObject() throws Exception {
 		JSONObject obj = new JSONObject();
 		EnDe_crypter enc = new EnDe_crypter(getPassword());
-		obj.put("first_name", (getFirst_name()));
-		obj.put("last_name", (getLast_name()));
-		obj.put("user_name", (getUser_name()));
-		obj.put("balance", (String.valueOf(getBalance())));
-		
-		String enc_data = enc.encrypt(obj.toString());
-		
-		JSONObject object = new JSONObject();
-		object.put("enc_data", enc_data);
-		object.put("iv", new BASE64Encoder().encode(enc.getIv()));
-		//		System.out.println("as: "+enc.getIv().toString());
-		//		obj.put("iv", enc.getIv().toString());
+		obj.put("first_name", enc.encrypt(getFirst_name()).toString());
+		obj.put("fn_iv", new BASE64Encoder().encode(enc.getIv()));
+		obj.put("last_name", enc.encrypt(getLast_name()).toString());
+		obj.put("ln_iv", new BASE64Encoder().encode(enc.getIv()));
+		obj.put("user_name", enc.encrypt(getUser_name()).toString());
+		obj.put("un_iv", new BASE64Encoder().encode(enc.getIv()));
+		obj.put("balance", enc.encrypt(String.valueOf(getBalance())).toString());
+		obj.put("b_iv", new BASE64Encoder().encode(enc.getIv()));
 
-		return object;
+		return obj;
 	}
 
 	public static String getCurrentDateAndTimeString() {
