@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
-import temps.Config;
-
 // Mukhammadjon Tokhirov
 public class Application {
 
