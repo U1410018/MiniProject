@@ -29,11 +29,14 @@ tmp/
 
 /.settings/
 
+
 *.tmp
 *.bak
 *.swp
 *~.nib
 local.properties
+
+*.classpath
 
 .loadpath
 .recommenders
