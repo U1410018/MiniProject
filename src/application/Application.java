@@ -19,11 +19,16 @@ public class Application {
 		User u3 = new User("Bunyod", "Ibrokhimov", "12174117", "hello1234");
 		
 		User user = User.getUserFromFile("12174169", "Pa$$w0rd");
-			System.out.println(user.toString());
+		System.out.println("password change: " + user.changePassword("123", "1234"));
+		//		user.deleteCurrentUser("Pa$$w0rd");
+		System.out.println(user.toString());
 		user = User.getUserFromFile("12174152", "Admin1234");
 		System.out.println(user.toString());
 		user = User.getUserFromFile("12174117", "hello1234");
 		System.out.println(user.toString());
+		
+		System.out.println("is_exists: "+User.userIsExists("12174169", "1234"));
+		
 	}
 	
 }
