@@ -71,6 +71,7 @@ public class Application {
 		User user2 = User.getUserFromFile("12174117", "hello1234");
 		System.out.println(user2.toString());
 		User user = User.getUserFromFile("12174169", "Pa$$w0rd");
+<<<<<<< HEAD
 		System.out.println(user.toString());
 		
 		Actions ac = new Actions(Action.DEP, user1);
@@ -78,6 +79,17 @@ public class Application {
 		ac.perform();
 		writeActionToFile(ac, user1);
 		
+=======
+		System.out.println("password change: " + user.changePassword("123", "1234"));
+		//		user.deleteCurrentUser("Pa$$w0rd");
+		System.out.println(user.toString());
+		user = User.getUserFromFile("12174152", "Admin1234");
+		System.out.println(user.toString());
+		user = User.getUserFromFile("12174117", "hello1234");
+		System.out.println(user.toString());
+		
+		System.out.println("is_exists: "+User.userIsExists("12174169", "1234"));
+>>>>>>> 780c532aefdc65080bb4d11f645fce386f015b02
 		
 	}
 	

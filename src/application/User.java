@@ -59,6 +59,8 @@ public class User {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
 	}
 
 	public OutputStreamWriter getWriter() throws FileNotFoundException {
@@ -162,8 +164,9 @@ public class User {
 		
 		User u = new User(first_name, last_name, user_name, password);
 		// TODO: decrypt the logs 
-		
-		u.setLogs(enc_data.getJSONArray("logs"));
+		if(enc_data.getJSONArray("logs").length() > 0) {
+			u.setLogs(enc_data.getJSONArray("logs"));
+		}
 		
 		u.setBalance(Float.valueOf(balance));
 //		User u = null;
