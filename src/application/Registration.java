@@ -1,4 +1,4 @@
-package authentication;
+package application;
 
 import java.awt.EventQueue;
 

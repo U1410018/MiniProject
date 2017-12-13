@@ -26,7 +26,9 @@ bin/
 tmp/
 
 .settings/
+.settings
 *.settings/
+*.settings
 
 *.tmp
 *.bak

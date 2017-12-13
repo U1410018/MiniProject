@@ -1,4 +1,4 @@
-package authentication;
+package application;
 
 import java.awt.EventQueue;
 
@@ -22,7 +22,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -34,28 +33,30 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+public class Login extends JFrame {
 
-public class ChangePassword extends JFrame {
-
-	
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2472156484106403170L;
 	private JPanel contentPane;
-	private JPasswordField txtUsername;
+	private JTextField txtUsername;
 	private JPasswordField passwordField;
 	private JLabel txtOr;
+	private JLabel txtmotto;
+	private JLabel txtwelcome;
+//	private static Client client;
+	/**
+	 * Launch the application.
+	 */
+	public static Login frame;
 
-	public static ChangePassword frame;
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ChangePassword frame = new ChangePassword();
+					frame = new Login();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,29 +65,34 @@ public class ChangePassword extends JFrame {
 		});
 	}
 
-	
-	public ChangePassword() {
-		
+	public Registration registration;
+	public static int port = 1500;
+	public static String ipaddRess = "127.0.0.1";
+
+
+	public Login() {
+//		setIconImage(Toolkit.getDefaultToolkit().getImage(Registration.class.getResource("/pizza_logo1.png")));
 		setResizable(false);
-		setTitle("Change Password");
-		
-		setBounds(100, 100, 334, 473);
+		setTitle("Sign In");
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 656, 473);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-//		Image img = new ImageIcon(this.getClass().getResource("/lbllogin.jpg")).getImage();
+		Image img = new ImageIcon(this.getClass().getResource("/lbllogin.jpg")).getImage();
 		contentPane.setLayout(null);
-//		Image img1 = new ImageIcon(this.getClass().getResource("/lblpass.jpg")).getImage();
+		Image img1 = new ImageIcon(this.getClass().getResource("/lblpass.jpg")).getImage();
 		Image img2 = new ImageIcon(this.getClass().getResource("/banking-image2.jpg")).getImage();
 
 		Panel panel = new Panel();
-		panel.setBounds(0, 0, 334, 455);
+		panel.setBounds(0, 0, 654, 455);
 		panel.setBackground(Color.WHITE);
 
-		passwordField = new JPasswordField("");
+		passwordField = new JPasswordField("password");
 		passwordField.setBorder(null);
 //		passwordField.addKeyListener(new KeyAdapter() {
 //			@Override
@@ -104,30 +110,47 @@ public class ChangePassword extends JFrame {
 //		});
 		
 		passwordField.addFocusListener(new FocusAdapter() {
-			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if (passwordField.getText().equals("password"))
+					passwordField.setText("");
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if (passwordField.getText().equals(""))
+					passwordField.setText("password");
+			}
 		});
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		passwordField.addMouseListener(new MouseAdapter() {
-			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (passwordField.getText().equals("password"))
+					passwordField.setText("");
+			}
+			// @Override
+			// public void mouseExited(MouseEvent arg0) {
+			// if(passwordField.getText().equals(""))
+			// passwordField.setText("password");
 
 		});
 		passwordField.setEchoChar('*');
 		passwordField.setToolTipText("");
 		passwordField.setForeground(new Color(26,177,136));
-		passwordField.setBounds(56, 198, 265, 37);
+		passwordField.setBounds(379, 198, 265, 37);
 
-		JLabel lblSignIn = new JLabel("Change Password");
-		lblSignIn.setBounds(78, 94, 243, 49);
+		JLabel lblSignIn = new JLabel("Sign In");
+		lblSignIn.setBounds(538, 94, 106, 49);
 		lblSignIn.setForeground(new Color(26,177,136));
-		lblSignIn.setFont(new Font("Dialog", Font.PLAIN, 30));
+		lblSignIn.setFont(new Font("Rockwell", Font.PLAIN, 33));
 
 		JLabel label_2 = new JLabel("");
 		label_2.setBounds(145, 121, 0, 0);
 		panel.setLayout(null);
 
-		txtUsername = new JPasswordField("");
+		txtUsername = new JTextField();
 		txtUsername.setBorder(null);
-		txtUsername.setEchoChar('*');
 		txtUsername.setBackground(new Color(255, 255, 255));
 //		txtUsername.addKeyListener(new KeyAdapter() {
 //			@Override
@@ -144,31 +167,33 @@ public class ChangePassword extends JFrame {
 //			}
 //		});
 		txtUsername.addMouseListener(new MouseAdapter() {
-			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (txtUsername.getText().equals("username"))
+					txtUsername.setText("");
+			}
+			// @Override
+			// public void mouseExited(MouseEvent arg0) {
+			// if(txtUsername.getText().equals(""))
+			// txtUsername.setText("username");
 
 		});
 		txtUsername.addFocusListener(new FocusAdapter() {
-			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				if (txtUsername.getText().equals("username"))
+					txtUsername.setText("");
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if (txtUsername.getText().equals(""))
+					txtUsername.setText("username");
+			}
 		});
 		Image img3 = new ImageIcon(this.getClass().getResource("/or1.png")).getImage();
-		txtOr = new JLabel("or");
-		txtOr.setForeground(new Color(255,255,255));
-		txtOr.setBounds(155, 331, 86, 20);
-		panel.add(txtOr);
-	
-		
-		JLabel lblOr = new JLabel("");
-		lblOr.setIcon(new ImageIcon(img3));
-		lblOr.setBounds(132, 312, 60, 60);
-		panel.add(lblOr);
-		
-		
-		JLabel lblLogin = new JLabel("Submit");
-		lblLogin.setBounds(11, 322, 151, 40);
-		lblLogin.setBackground(new Color(26,177,136));
-		lblLogin.setOpaque(true);
-		lblLogin.setForeground(new Color(255,255,255));
-		lblLogin.setFont(new Font("Rockwell", Font.PLAIN, 20));
+
+		JLabel lblLogin = new JLabel("");
 		lblLogin.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent arg0) {
@@ -180,74 +205,106 @@ public class ChangePassword extends JFrame {
 //				}
 //			}
 
-		});
-		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLogin.setBounds(11, 322, 151, 40);
-		panel.add(lblLogin);
-		
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				lblLogin.setBounds(332, 322, 151, 40);
+			}
 
-		JLabel lblCancel = new JLabel("Cancel");
-		lblCancel.setBounds(170, 322, 151, 40);
-		lblCancel.setBackground(new Color(26,177,136));
-		lblCancel.setOpaque(true);
-		lblCancel.setForeground(new Color(255,255,255));
-		lblCancel.setFont(new Font("Rockwell", Font.PLAIN, 20));
-		lblCancel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCancel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblLogin.setBounds(334, 322, 151, 40);
+			}
+		});
+
+		JLabel lblSignup = new JLabel("");
+		Image img5 = new ImageIcon(this.getClass().getResource("/signup.jpg")).getImage();
+		lblSignup.setIcon(new ImageIcon(img5));
+		lblSignup.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSignup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MainPage.frame = new MainPage();
-				MainPage.frame.setEnabled(true);
+				Registration.frame = new Registration();
+				Registration.frame.setVisible(true);
 				frame.dispose();
 			}
 
-//			public void mouseEntered(MouseEvent arg0) {
-//				lblCancel.setBounds(172, 322, 151, 40);
-//			}
-//
-//			public void mouseExited(MouseEvent e) {
-//				lblCancel.setBounds(170, 322, 151, 40);
-//			}
+			public void mouseEntered(MouseEvent arg0) {
+				lblSignup.setBounds(495, 322, 151, 40);
+			}
+
+			public void mouseExited(MouseEvent e) {
+				lblSignup.setBounds(493, 322, 151, 40);
+			}
 		});
 
+		txtOr = new JLabel("or");
+		txtOr.setForeground(new Color(255,255,255));
+		txtOr.setBounds(478, 331, 86, 20);
+		panel.add(txtOr);
 		
-		lblCancel.setBounds(170, 322, 151, 40);
-		panel.add(lblCancel);
+		txtmotto = new JLabel("Inha Banking System");
+		txtmotto.setForeground(new Color(255,255,255));
+		txtmotto.setBounds(50, 245, 192, 24);
+		txtmotto.setFont(new Font("Century Gothic", Font.BOLD, 19));
+		panel.add(txtmotto);
 		
 		
+		txtwelcome = new JLabel("Welcome to");
+		txtwelcome.setForeground(new Color(26, 177, 136));
+		txtwelcome.setBounds(50, 95, 200, 40);
+		txtwelcome.setFont(new Font("Century Gothic", Font.PLAIN, 32));
+		panel.add(txtwelcome);
+	
+		
+		JLabel lblOr = new JLabel("");
+		lblOr.setIcon(new ImageIcon(img3));
+		lblOr.setBounds(455, 312, 60, 60);
+		panel.add(lblOr);
+		lblSignup.setBounds(493, 322, 151, 40);
+		panel.add(lblSignup);
+		Image img4 = new ImageIcon(this.getClass().getResource("/login.jpg")).getImage();
+		lblLogin.setIcon(new ImageIcon(img4));
+		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLogin.setBounds(334, 322, 151, 40);
+		panel.add(lblLogin);
 		txtUsername.setForeground(new Color(26,177,136));
-		txtUsername.setBounds(56, 154, 265, 37);
-		txtUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtUsername.setText("username");
+		txtUsername.setBounds(379, 154, 265, 37);
+		txtUsername.setFont(new Font("Rockwell", Font.PLAIN, 15));
 		txtUsername.setColumns(10);
 		panel.add(txtUsername);
 
-		JLabel lblQ = new JLabel("OLD");
+		JLabel lblQ = new JLabel("");
 		lblQ.setHorizontalAlignment(SwingConstants.CENTER);
-		lblQ.setBackground(new Color(255,255,255));
-		lblQ.setOpaque(true);
-		lblQ.setForeground(new Color(26,177,136));
-		lblQ.setFont(new Font("Rockwell", Font.BOLD, 11));
-		lblQ.setBounds(11, 154, 46, 37);
+		lblQ.setIcon(new ImageIcon(img));
+		lblQ.setBounds(334, 154, 46, 37);
 		panel.add(lblQ);
 		panel.add(label_2);
-		
+		// Image img5 = new
+		// ImageIcon(this.getClass().getResource("/signup.png")).getImage();
 		panel.add(passwordField);
 		panel.add(lblSignIn);
 		contentPane.add(panel);
 
-		JLabel lblQ_1 = new JLabel("NEW");
+		JLabel lblQ_1 = new JLabel("");
 		lblQ_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblQ_1.setBackground(new Color(255,255,255));
-		lblQ_1.setOpaque(true);
-		lblQ_1.setForeground(new Color(26,177,136));
-		lblQ_1.setFont(new Font("Rockwell", Font.BOLD, 11));
-		lblQ_1.setBounds(11, 198, 46, 37);
+		lblQ_1.setIcon(new ImageIcon(img1));
+		lblQ_1.setBounds(333, 198, 46, 37);
 		panel.add(lblQ_1);
-		Image img6 = new ImageIcon(this.getClass().getResource("/ibs-logo-white2.png")).getImage();
 
+		
+
+		JLabel lblLogo = new JLabel("");
+		lblLogo.setBackground(new Color(255, 255, 255));
+		Image img6 = new ImageIcon(this.getClass().getResource("/ibs-logo-white2.png")).getImage();
+		lblLogo.setIcon(new ImageIcon(img6));
+		lblLogo.setBounds(50, 150, 192, 96);
+		panel.add(lblLogo);
+
+//		Image img3 = new ImageIcon(this.getClass().getResource("/or1.png")).getImage();
 
 		JLabel lblQ_2 = new JLabel("");
-		lblQ_2.setBounds(0, -1, 334, 445);
+		lblQ_2.setBounds(0, -1, 653, 445);
 		panel.add(lblQ_2);
 		lblQ_2.setIcon(new ImageIcon(img2));
 		
@@ -338,4 +395,9 @@ public class ChangePassword extends JFrame {
 //	}
 
 	public static boolean isVerified = false;
+	
 }
+
+
+
+
