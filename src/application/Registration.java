@@ -88,6 +88,7 @@ public class Registration extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	public static User CurrentUser;
 	public Registration() {
 //		setIconImage(Toolkit.getDefaultToolkit().getImage(Registration.class.getResource("/pizza_logo1.png")));
 		setResizable(false);
@@ -304,7 +305,16 @@ public class Registration extends JFrame {
 		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-//				sendFilledForm();
+				if(sendFilledForm())
+					{
+						User u = new User(fieldFirstName.getText(), fieldLastName.getText(), fieldLOGO.getText(), passwordField.getText());
+						if(u.created) {
+							CurrentUser = u;
+							MainPage.frame = new MainPage();
+							MainPage.frame.setVisible(true);
+							frame.dispose();
+						}
+					}
 			}
 		});
 		btnNewButton.setFocusable(false);
@@ -383,34 +393,37 @@ public class Registration extends JFrame {
 		contentPane.add(lblNewLabel);
 	}
 
-//	public void sendFilledForm() {
-//		try {
-//			if (fieldFirstName.getText().equals("")) {
-//				Alert("Fill the first name field");
-//			} else if (fieldLastName.getText().equals("")) {
-//				Alert("Fill the Last name field");
-//			} else if (fieldLOGO.getText().equals("")) {
-//				Alert("Please, fill the username field");
-//			} else if (!checkIsItEmailOrNot(fieldEMail.getText())) {
-//				Alert("Pease, fill the Email field correctly");
-//			} else
+	public boolean sendFilledForm() {
+		try {
+			if (fieldFirstName.getText().equals("")) {
+				Alert("Fill the first name field");
+				return false;
+			} else if (fieldLastName.getText().equals("")) {
+				Alert("Fill the Last name field");
+				return false;
+			} else if (fieldLOGO.getText().equals("")) {
+				Alert("Please, fill the username field");
+				return false;
+			}  else if (!passwordField.getText().equals(passwordComfirm.getText()) && passwordField.getText().equals("")) {
 //				if (passwordField.getText().equals(passwordComfirm.getText()) && !passwordField.getText().equals("")) {
 //				JSONObject obj = new JSONObject();
 //				obj.put("FName", fieldFirstName.getText());
 //				obj.put("LName", fieldLastName.getText());
 //				obj.put("logo", fieldLOGO.getText());
-//				obj.put("Email", fieldEMail.getText());
 //				obj.put("psw", passwordField.getText());
 //				obj.put("pswc", passwordComfirm.getText());
 //				password = passwordField.getText();
 //				Client.output.writeUTF("REG|" + obj);
 //			} else
-//				Alert("Password is not confirmed!");
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+				Alert("Password is not confirmed!");
+				return false;	
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public boolean checkIsItEmailOrNot(String email) {
 		return email.matches("\\S+@+\\w[a-zA-Z]+.+\\w[a-z]");

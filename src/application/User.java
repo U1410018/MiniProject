@@ -39,7 +39,7 @@ public class User {
 	public User getInstance() {
 		return new User();
 	}
-
+	public boolean created = false;
 	public User(String first_name, String last_name, String user_name, String password) {
 		setFirst_name(first_name);
 		setLast_name(last_name);
@@ -61,8 +61,8 @@ public class User {
  				}
  				
 			}
-			
-		}
+			created = true;
+		}else created = false;
 		
 		OutputStreamWriter r;
 		
@@ -73,6 +73,7 @@ public class User {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			created = false;
 		}
 	}
 	

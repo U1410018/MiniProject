@@ -37,6 +37,7 @@ public class MainPage extends JFrame {
 				try {
 					MainPage frame = new MainPage();
 					frame.setVisible(true);
+					Config.initialize();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -115,7 +116,11 @@ public class MainPage extends JFrame {
 		});
 		panel.add(change);
 		
-		
+		try {
+			username.setText(Registration.CurrentUser.getUser_name());
+		}catch(Exception ex) {
+			System.out.println("error");
+		}
 		JLabel delete = new JLabel("Delete Account", SwingConstants.CENTER);
 		delete.setForeground(new Color(255,35,98));
 		delete.setBackground(new Color(210, 210, 210));

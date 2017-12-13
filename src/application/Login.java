@@ -266,6 +266,25 @@ public class Login extends JFrame {
 		lblLogin.setIcon(new ImageIcon(img4));
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setBounds(334, 322, 151, 40);
+		lblLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					User u = User.getUserFromFile(txtUsername.getText(), passwordField.getText());
+					if(u!=null) {
+						Registration.CurrentUser = u;
+						MainPage.frame = new MainPage();
+						MainPage.frame.setVisible(true);
+						frame.dispose();
+					}else {
+						System.out.println("user not exists");
+					}
+				}catch (Exception e) {
+					System.out.println("user not exists");
+					Alert("Password is not confirmed!");
+				}
+			}
+		});
 		panel.add(lblLogin);
 		txtUsername.setForeground(new Color(26,177,136));
 		txtUsername.setText("username");
@@ -344,7 +363,9 @@ public class Login extends JFrame {
 	public void ReadMessage() {
 
 	}
-
+	public void Alert(String message) {
+		JOptionPane.showMessageDialog(null, message);
+	}
 
 	public static Thread serverStatus;
 

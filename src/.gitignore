@@ -26,7 +26,6 @@ bin/
 tmp/
 
 /src/temps/
-
 .settings/
 .settings
 *.settings/
