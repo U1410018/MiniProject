@@ -85,7 +85,7 @@ public class ChangePassword extends JFrame {
 		Panel panel = new Panel();
 		panel.setBounds(0, 0, 334, 455);
 		panel.setBackground(Color.WHITE);
-
+		
 		passwordField = new JPasswordField("");
 		passwordField.setBorder(null);
 //		passwordField.addKeyListener(new KeyAdapter() {
@@ -170,16 +170,17 @@ public class ChangePassword extends JFrame {
 		lblLogin.setForeground(new Color(255,255,255));
 		lblLogin.setFont(new Font("Rockwell", Font.PLAIN, 20));
 		lblLogin.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent arg0) {
-//				try {
-//					getClient().getOutputStream().writeUTF(
-//							MessageFormat.format("LOGIN|{0}|{1}", txtUsername.getText(), passwordField.getText()));
-//				} catch (Exception e) {
-//					System.out.println(e.getMessage());
-//				}
-//			}
-
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				User u = User.getInstance();
+				u.setUser_name(Registration.CurrentUser.getUser_name());
+				if(u.changePassword(txtUsername.getText(), passwordField.getText())) {
+					Alert("Password Changed, Login Again");
+					Login.frame = new Login();
+					Login.frame.setVisible(true);
+					frame.dispose();
+				}
+			}
 		});
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setBounds(11, 322, 151, 40);
@@ -283,7 +284,9 @@ public class ChangePassword extends JFrame {
 	}
 
 	public Thread readerThread;
-
+	public void Alert(String message) {
+		JOptionPane.showMessageDialog(null, message);
+	}
 	public void ReadMessage() {
 
 	}

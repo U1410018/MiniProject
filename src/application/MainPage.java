@@ -135,6 +135,12 @@ public class MainPage extends JFrame {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure to delete your account?", "Warning", dialogButton);
 				if(dialogResult == 0) {
 				  System.out.println("Yes option");
+				  User u = Registration.CurrentUser;
+				  if(u.deleteCurrentUser()) {
+					  Login.frame = new Login();
+					  Login.frame.setVisible(true);
+					  frame.dispose();
+				  }
 				} else {
 				  System.out.println("No Option");
 				} 

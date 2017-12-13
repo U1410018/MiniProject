@@ -36,7 +36,7 @@ public class User {
 	private User() {
 		 		
 	}
-	public User getInstance() {
+	public static User getInstance() {
 		return new User();
 	}
 	public boolean created = false;
@@ -126,11 +126,18 @@ public class User {
  			JSONArray array = getUsersJsonArrayObject();
  			for(int i=0;i<array.length();i++) {
  				JSONObject object = array.getJSONObject(i);
- 				if(object.getString("username").equals(user_name)) {
+ 				if(object.getString("username").equals(getUser_name())) {
  					if(object.getString("password").equals(EnDe_crypter.hash256(old_password, user_name))) {
+ 						User u = getUserFromFile(user_name, old_password);
+ 						u.setPassword(old_password);
+ 						JSONObject o = u.getUserInfoJsonObject();
+ 						Config.deleteUserLogsFile(getUser_name());
+ 						writeToFile(Config.getUserLogsFile(getUser_name()), o.toString());
+ 						
  						object.put("password", EnDe_crypter.hash256(new_password, user_name));
  						array.remove(i);
  						array.put(object);
+ 						File f = getUser_File();
  						writeToFile(Config.getTempFile(), array.toString());
  						return true; 
  					}
@@ -142,12 +149,12 @@ public class User {
  
  		return false;
  	}
- 	public void deleteCurrentUser(String password) {
+ 	public boolean deleteCurrentUser() {
  		try {
  			JSONArray array = getUsersJsonArrayObject();
  			for(int i=0;i<array.length();i++) {
  				JSONObject object = array.getJSONObject(i);
- 				if(object.getString("username").equals(this.user_name) && object.getString("password").equals(EnDe_crypter.hash256(password, this.user_name))) {
+ 				if(object.getString("username").equals(this.user_name)) {
  					array.remove(i);
  					writeToFile(Config.getTempFile(), array.toString());
  					if(clearUserData()) {
@@ -155,14 +162,14 @@ public class User {
  					}else {
  						System.out.println("error on deleting user account");
  					}
+ 					return true;
  				}
- 				
  			}
+ 			return false;
  		} catch (Exception e) {
- 			// TODO Auto-generated catch block
  			e.printStackTrace();
+			return false;
  		}
-  		
  	}
  	private boolean clearUserData() {
  		return getUserFile(user_name).delete();
