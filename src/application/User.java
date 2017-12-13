@@ -32,6 +32,13 @@ public class User {
 	public File getUser_File() {
 		return user_file;
 	}
+	
+	private User() {
+		 		
+	}
+	public User getInstance() {
+		return new User();
+	}
 
 	public User(String first_name, String last_name, String user_name, String password) {
 		setFirst_name(first_name);
@@ -42,31 +49,148 @@ public class User {
 		user_file = new File("src/users/" + user_name + ".log");
 
 		if (!user_file.exists()) {
-			try {
-				user_file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (Config.createFile(user_file)) {
+ 				JSONObject object = new JSONObject();
+ 				try {
+ 					object.put("username", user_name);
+ 					object.put("password", EnDe_crypter.hash256(password, user_name));
+ 					addUser(user_name, object);
+ 				} catch (Exception e) {
+ 					// TODO Auto-generated catch block
+ 					e.printStackTrace();
+ 				}
+ 				
 			}
+			
 		}
 		
 		OutputStreamWriter r;
+		
 		try {
-			r = this.getWriter();
+			r = User.getWriter(this.getUser_File(), false);
 			r.write(this.getUserInfoJsonObject().toString());
 			r.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
+	
+	public static JSONArray getUsersJsonArrayObject() throws JSONException {
+		 
+ 		return new JSONArray(readFile(Config.getTempFile()));
+ 	}
+ 
+ 	public static boolean userIsExists(String username, String password) {
+ 		try {
+ 			JSONArray array = getUsersJsonArrayObject();
+ 			for(int i=0;i<array.length();i++) {
+ 				JSONObject object = array.getJSONObject(i);
+ 				if(object.getString("username").equals(username)) {
+ 					if(object.getString("password").equals(EnDe_crypter.hash256(password, username))) {
+ 						return true; 
+ 					}
+ 				}
+ 			}
+ 		} catch (Exception e) {
+ 			//System.out.println("error: " + e.getMessage());
+ 		}
+ 
+ 		return false;
+ 	}
+ 	
+ 	private boolean addUser(String username, JSONObject object) {
+ 		JSONArray array = null;
+ 		try {
+ 			array = getUsersJsonArrayObject();
+ 			array.put(object);
+ 			writeToFile(Config.getTempFile(), array.toString());
+ 			return true;
+ 		} catch (Exception e) {
+ 			System.out.println("no json object: " + e.getMessage());
+ 			array = new JSONArray();
+ 			try {
+ 				array.put(object);
+ 				writeToFile(Config.getTempFile(), array.toString());
+ 				return true;
+ 			} catch (Exception ex) {
+ 				ex.printStackTrace();
+ 			}
+ 		}
+ 
+ 		return false;
+ 	}
+ 	public boolean changePassword(String old_password, String new_password) {
+ 		try {
+ 			JSONArray array = getUsersJsonArrayObject();
+ 			for(int i=0;i<array.length();i++) {
+ 				JSONObject object = array.getJSONObject(i);
+ 				if(object.getString("username").equals(user_name)) {
+ 					if(object.getString("password").equals(EnDe_crypter.hash256(old_password, user_name))) {
+ 						object.put("password", EnDe_crypter.hash256(new_password, user_name));
+ 						array.remove(i);
+ 						array.put(object);
+ 						writeToFile(Config.getTempFile(), array.toString());
+ 						return true; 
+ 					}
+ 				}
+ 			}
+ 		} catch (Exception e) {
+ 			System.out.println("error: " + e.getMessage());
+ 		}
+ 
+ 		return false;
+ 	}
+ 	public void deleteCurrentUser(String password) {
+ 		try {
+ 			JSONArray array = getUsersJsonArrayObject();
+ 			for(int i=0;i<array.length();i++) {
+ 				JSONObject object = array.getJSONObject(i);
+ 				if(object.getString("username").equals(this.user_name) && object.getString("password").equals(EnDe_crypter.hash256(password, this.user_name))) {
+ 					array.remove(i);
+ 					writeToFile(Config.getTempFile(), array.toString());
+ 					if(clearUserData()) {
+ 						System.out.println("user deleted: " + user_name);
+ 					}else {
+ 						System.out.println("error on deleting user account");
+ 					}
+ 				}
+ 				
+ 			}
+ 		} catch (Exception e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+  		
+ 	}
+ 	private boolean clearUserData() {
+ 		return getUserFile(user_name).delete();
+ 	}
+ 	public static boolean writeToFile(File file, String data) {
+ 		try {
+ 			OutputStreamWriter writer = getWriter(file, false);
+ 			writer.write(data);
+ 			writer.close();
+ 		} catch (Exception e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+ 
+ 		return false;
+ 	}
+ 
+ 	public static OutputStreamWriter getWriter(File file, boolean appendable) throws FileNotFoundException {
+ 		return new OutputStreamWriter(new FileOutputStream(file, appendable));
+ 	}
+  
+ 	public static InputStreamReader getreader(File file) throws FileNotFoundException {
+ 		return new InputStreamReader(new FileInputStream(file));
+ 	}
 
-	public OutputStreamWriter getWriter() throws FileNotFoundException {
-		FileOutputStream stream = new FileOutputStream(user_file, false);
-		return new OutputStreamWriter(stream);
-	}
+//	public OutputStreamWriter getWriter() throws FileNotFoundException {
+//		FileOutputStream stream = new FileOutputStream(user_file, false);
+//		return new OutputStreamWriter(stream);
+//	}
 	
 	public static OutputStreamWriter getWriter(String name) throws FileNotFoundException {
 		FileOutputStream stream = new FileOutputStream(getUserFile(name), false);
@@ -79,8 +203,8 @@ public class User {
 //	}
 	
 	
-	public static InputStreamReader getReader(String name) throws FileNotFoundException {
-		File ufile = new File("src/users/" + name + ".log");
+	public static InputStreamReader getLogReader(String name) throws FileNotFoundException {
+		File ufile = new File(Config.BASE_USER_DIR + "/" + name + ".log");
 		if (ufile.exists()) {
 			FileInputStream stream = new FileInputStream(ufile);
 			return new InputStreamReader(stream);
@@ -137,7 +261,24 @@ public class User {
 		this.balance = balance;
 	}
 
-	@SuppressWarnings("finally")
+
+	public static String readFile(File file) {
+		String s = "";
+		Scanner scan;
+ 		try {
+ 			scan = new Scanner(file);
+ 
+ 			while (scan.hasNextLine()) {
+ 				s += scan.nextLine();
+ 			}
+ 			scan.close();
+ 		} catch (FileNotFoundException e) {
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+  		}
+ 		return s;
+	}
+	
 	public static User getUserFromFile(String username, String password){
 		try {
 		EnDe_crypter enc = new EnDe_crypter(password);
@@ -164,9 +305,9 @@ public class User {
 		
 		User u = new User(first_name, last_name, user_name, password);
 		// TODO: decrypt the logs 
-		if(enc_data.getJSONArray("logs").length() > 0) {
-			u.setLogs(enc_data.getJSONArray("logs"));
-		}
+		
+		u.setLogs(enc_data.getJSONArray("logs"));
+		
 		
 		u.setBalance(Float.valueOf(balance));
 //		User u = null;
