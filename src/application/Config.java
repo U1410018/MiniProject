@@ -18,6 +18,9 @@ public class Config {
 		file = new File(TEMP_FILE);
 		createFile(file);
 	}
+	public static File getTransferTemps(String user_name) {
+		return new File(BASE_USER_INFOS + "/" + user_name + "_tmp.dat");
+	}
 	public static File getTempFile() {
 		return new File(TEMP_FILE);
 	}

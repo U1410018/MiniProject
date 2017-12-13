@@ -25,6 +25,8 @@ hs_err_pid*
 bin/
 tmp/
 
+/src/temps/
+
 .settings/
 .settings
 *.settings/

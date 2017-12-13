@@ -281,37 +281,37 @@ public class User {
 	
 	public static User getUserFromFile(String username, String password){
 		try {
-		EnDe_crypter enc = new EnDe_crypter(password);
-		String s = "";
-		Scanner scan = new Scanner(getUserFile(username));
-		while (scan.hasNextLine()) {
-			s += scan.nextLine();
-		}
-		scan.close();
-		
-		JSONObject enc_data = new JSONObject(s);
-		
-		byte[] fn_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("fn_iv"));
-		byte[] ln_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("ln_iv"));
-		byte[] un_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("un_iv"));
-		byte[] b_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("b_iv"));
-//		byte[] logs_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("logs_iv"));
-
-		String first_name = enc.decrypt(enc_data.getString("first_name"), fn_iv); 
-		String last_name = enc.decrypt(enc_data.getString("last_name"), ln_iv);
-		String user_name = enc.decrypt(enc_data.getString("user_name"), un_iv);
-		String balance = enc.decrypt(enc_data.getString("balance"), b_iv);
-//		setLogs(enc.decrypt(enc_data.getJSONArray("logs").toString(), logs_iv));
-		
-		User u = new User(first_name, last_name, user_name, password);
-		// TODO: decrypt the logs 
-		
-		u.setLogs(enc_data.getJSONArray("logs"));
-		
-		
-		u.setBalance(Float.valueOf(balance));
-//		User u = null;
-		return u;
+			EnDe_crypter enc = new EnDe_crypter(password);
+			String s = "";
+			Scanner scan = new Scanner(getUserFile(username));
+			while (scan.hasNextLine()) {
+				s += scan.nextLine();
+			}
+			scan.close();
+			
+			JSONObject enc_data = new JSONObject(s);
+			
+			byte[] fn_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("fn_iv"));
+			byte[] ln_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("ln_iv"));
+			byte[] un_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("un_iv"));
+			byte[] b_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("b_iv"));
+	//		byte[] logs_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("logs_iv"));
+	
+			String first_name = enc.decrypt(enc_data.getString("first_name"), fn_iv); 
+			String last_name = enc.decrypt(enc_data.getString("last_name"), ln_iv);
+			String user_name = enc.decrypt(enc_data.getString("user_name"), un_iv);
+			String balance = enc.decrypt(enc_data.getString("balance"), b_iv);
+	//		setLogs(enc.decrypt(enc_data.getJSONArray("logs").toString(), logs_iv));
+			
+			User u = new User(first_name, last_name, user_name, password);
+			// TODO: decrypt the logs 
+			
+			u.setLogs(enc_data.getJSONArray("logs"));
+			
+			
+			u.setBalance(Float.valueOf(balance));
+	//		User u = null;
+			return u;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			System.out.println("json error null");

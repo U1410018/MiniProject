@@ -47,47 +47,20 @@ public class Application {
 	public static void main(String[] args) {
 		Config.initialize();
 		
-/*		User u2 = new User("Umar", "Kholdarbekov", "12174152", "Admin1234");
-		User u3 = new User("Bunyod", "Ibrokhimov", "12174117", "hello1234");
-		User u1 = new User("Muhammad", "Tokhirov", "12174169", "Pa$$w0rd");
-	*/	
-//		String fileContent = "";
-//		Scanner scan;
-//		try {
-//			scan = new Scanner(User.getUserFile(u1.getUser_name()));
-//			while (scan.hasNextLine()) {
-//				fileContent += scan.nextLine();
-//			}
-//			System.out.println("File contents in main: " + fileContent);
-//			scan.close();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		
-		User user1 = User.getUserFromFile("12174152", "Admin1234");
+//		User u = new User("Mukhammadjon","Tokhirov", "12174169", "Admin1234");
+		User user1 = User.getUserFromFile("12174169", "Admin1234");
 		System.out.println(user1.toString());
-		User user2 = User.getUserFromFile("12174117", "hello1234");
-		System.out.println(user2.toString());
-		User user = User.getUserFromFile("12174169", "Pa$$w0rd");
-		System.out.println(user.toString());
+//		User user2 = User.getUserFromFile("12174117", "hello1234");
+//		System.out.println(user2.toString());
+//		User user = User.getUserFromFile("12174169", "Pa$$w0rd");
+//		System.out.println(user.toString());
 		
 		Actions ac = new Actions(Action.DEP, user1);
 		ac.setAmount_of_money_in_action(666);
 		ac.perform();
 		writeActionToFile(ac, user1);
 		
-		System.out.println("password change: " + user.changePassword("123", "1234"));
-		//		user.deleteCurrentUser("Pa$$w0rd");
-//		System.out.println(user.toString());
-//		user = User.getUserFromFile("12174152", "Admin1234");
-//		System.out.println(user.toString());
-//		user = User.getUserFromFile("12174117", "hello1234");
-//		System.out.println(user.toString());
-		
-		System.out.println("is_exists: "+User.userIsExists("12174169", "1234"));
-		
+//		
 	}
 	
 }
