@@ -27,7 +27,8 @@ public class User {
 	private String password;
 	private float balance = 0;
 	private File user_file;
-
+	private JSONArray logs = new JSONArray();
+	
 	public File getUser_File() {
 		return user_file;
 	}
@@ -37,8 +38,9 @@ public class User {
 		setLast_name(last_name);
 		setUser_name(user_name);
 		setPassword(password);
+		
 		user_file = new File("src/users/" + user_name + ".log");
-//		System.out.println(user_file.getAbsoluteFile());
+
 		if (!user_file.exists()) {
 			try {
 				user_file.createNewFile();
@@ -47,9 +49,6 @@ public class User {
 				e.printStackTrace();
 			}
 		}
-//		} else {
-//			System.out.println("The file already exists");
-//		}
 		
 		OutputStreamWriter r;
 		try {
@@ -60,12 +59,15 @@ public class User {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
 
 	public OutputStreamWriter getWriter() throws FileNotFoundException {
 		FileOutputStream stream = new FileOutputStream(user_file, false);
+		return new OutputStreamWriter(stream);
+	}
+	
+	public static OutputStreamWriter getWriter(String name) throws FileNotFoundException {
+		FileOutputStream stream = new FileOutputStream(getUserFile(name), false);
 		return new OutputStreamWriter(stream);
 	}
 
@@ -73,7 +75,8 @@ public class User {
 //		FileInputStream stream = new FileInputStream(user_file);
 //		return new InputStreamReader(stream);
 //	}
-
+	
+	
 	public static InputStreamReader getReader(String name) throws FileNotFoundException {
 		File ufile = new File("src/users/" + name + ".log");
 		if (ufile.exists()) {
@@ -149,13 +152,19 @@ public class User {
 		byte[] ln_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("ln_iv"));
 		byte[] un_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("un_iv"));
 		byte[] b_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("b_iv"));
+//		byte[] logs_iv = new BASE64Decoder().decodeBuffer(enc_data.getString("logs_iv"));
 
 		String first_name = enc.decrypt(enc_data.getString("first_name"), fn_iv); 
 		String last_name = enc.decrypt(enc_data.getString("last_name"), ln_iv);
 		String user_name = enc.decrypt(enc_data.getString("user_name"), un_iv);
 		String balance = enc.decrypt(enc_data.getString("balance"), b_iv);
-
+//		setLogs(enc.decrypt(enc_data.getJSONArray("logs").toString(), logs_iv));
+		
 		User u = new User(first_name, last_name, user_name, password);
+		// TODO: decrypt the logs 
+		
+		u.setLogs(enc_data.getJSONArray("logs"));
+		
 		u.setBalance(Float.valueOf(balance));
 //		User u = null;
 		return u;
@@ -183,14 +192,17 @@ public class User {
 	public JSONObject getUserInfoJsonObject() throws Exception {
 		JSONObject obj = new JSONObject();
 		EnDe_crypter enc = new EnDe_crypter(getPassword());
-		obj.put("first_name", enc.encrypt(getFirst_name()).toString());
+		obj.put("first_name", enc.encrypt(getFirst_name()));
 		obj.put("fn_iv", new BASE64Encoder().encode(enc.getIv()));
-		obj.put("last_name", enc.encrypt(getLast_name()).toString());
+		obj.put("last_name", enc.encrypt(getLast_name()));
 		obj.put("ln_iv", new BASE64Encoder().encode(enc.getIv()));
-		obj.put("user_name", enc.encrypt(getUser_name()).toString());
+		obj.put("user_name", enc.encrypt(getUser_name()));
 		obj.put("un_iv", new BASE64Encoder().encode(enc.getIv()));
-		obj.put("balance", enc.encrypt(String.valueOf(getBalance())).toString());
+		obj.put("balance", enc.encrypt(String.valueOf(getBalance())));
 		obj.put("b_iv", new BASE64Encoder().encode(enc.getIv()));
+		// TODO: encrypt the logs
+		
+		obj.put("logs", getLogs());
 		
 		return obj;
 	}
@@ -201,5 +213,13 @@ public class User {
 		String result = String.format("%d-%d-%d %d:%d:%d", date.getYear() + 1900, date.getMonth() + 1,
 				date.getDay() + 10, date.getHours(), date.getMinutes(), date.getSeconds());
 		return result;
+	}
+
+	public JSONArray getLogs() {
+		return logs;
+	}
+
+	public void setLogs(JSONArray logs) {
+		this.logs = logs;
 	}
 }
